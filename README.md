@@ -1,1 +1,2 @@
-# godot-multiplayer
+# SMP
+Godot Simple Multiplayer

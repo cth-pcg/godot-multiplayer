@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1db8f528oskp"]
+
+[ext_resource type="Script" path="res://scenes/player_2d.gd" id="1_dcxls"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_r8jri"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/sync = true
+properties/0/watch = false
+properties/1/path = NodePath(".:peer_id")
+properties/1/spawn = true
+properties/1/sync = false
+properties/1/watch = false
+
+[node name="Player2D" type="CharacterBody2D"]
+script = ExtResource("1_dcxls")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(0, -32, 0, 0, 32, 0, 32, -32)
+
+[node name="Sprite" type="Node2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="Sprite"]
+polygon = PackedVector2Array(0, 0, 0, -32, 0, -32, 0, -32, 32, -32, 32, 0)
+
+[node name="Outline" type="Polygon2D" parent="Sprite"]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(0, -32, 2, -30, 2, -2, 30, -2, 30, -30, 2, -30, 0, -32, 32, -32, 32, 0, 0, 0)
+
+[node name="Label" type="Label" parent="."]
+offset_top = -56.0
+offset_right = 32.0
+offset_bottom = -33.0
+horizontal_alignment = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_r8jri")

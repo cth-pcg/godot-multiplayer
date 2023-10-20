@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://copdg6y03pfss"]
+
+[ext_resource type="Script" path="res://scenes/map_2d.gd" id="1_hajy4"]
+
+[node name="map_2d" type="Node2D"]
+script = ExtResource("1_hajy4")
+
+[node name="Floor" type="StaticBody2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="Floor"]
+polygon = PackedVector2Array(-128, 328, -128, 312, 768, 312, 768, 328)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Floor"]
+polygon = PackedVector2Array(-128, 312, -128, 328, 768, 328, 768, 312)
