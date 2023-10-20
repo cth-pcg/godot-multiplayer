@@ -16,17 +16,20 @@ properties/1/watch = false
 script = ExtResource("1_dcxls")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(0, -32, 0, 0, 32, 0, 32, -32)
+position = Vector2(-14.4, 1.6)
+polygon = PackedVector2Array(-1.6, -33.6, -1.6, -1.6, 30.4, -1.6, 30.4, -33.6)
 
 [node name="Sprite" type="Node2D" parent="."]
+position = Vector2(-14.4, 1.6)
 
 [node name="Polygon2D" type="Polygon2D" parent="Sprite"]
-polygon = PackedVector2Array(0, 0, 0, -32, 0, -32, 0, -32, 32, -32, 32, 0)
+polygon = PackedVector2Array(-1.6, -1.6, -1.6, -33.6, 30.4, -33.6, 30.4, -1.6)
 
 [node name="Label" type="Label" parent="."]
+offset_left = -64.0
 offset_top = -56.0
-offset_right = 32.0
-offset_bottom = -33.0
+offset_right = 64.0
+offset_bottom = -32.0
 horizontal_alignment = 1
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]

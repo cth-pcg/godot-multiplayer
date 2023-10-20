@@ -9,7 +9,6 @@ extends CharacterBody2D
 
 
 # BASIC MOVEMENT VARAIABLES ---------------- #
-var face_direction: float = 1
 var direction: float = 1
 
 @export var max_speed: float = 560
@@ -38,6 +37,26 @@ var jump_buffer_timer: float = 0
 var is_jumping: bool = false
 # ----------------------------------- #
 
+# Peer id.
+@export var peer_id: int: 
+	set(value):
+		peer_id = value
+		name = str(peer_id)
+		$Label.text = str(peer_id)
+		set_multiplayer_authority(peer_id)
+
+
+func _ready():
+	# Set local camera.
+	if peer_id == multiplayer.get_unique_id():
+		var cam: Camera2D = Camera2D.new()
+		add_child(cam)
+	# Set process functions for current player.
+	var is_local = is_multiplayer_authority()
+	set_process_input(is_local)
+	set_physics_process(is_local)
+	set_process(is_local)
+
 
 func _physics_process(delta: float) -> void:
 	direction = Input.get_axis("move_left", "move_right")
@@ -63,22 +82,10 @@ func x_movement(delta: float) -> void:
 	
 	# Are we turning?
 	# Deciding between acceleration and turn_acceleration
-	var accel_rate : float = acceleration if sign(velocity.x) == direction else turning_acceleration
+	var accel_rate: float = acceleration if sign(velocity.x) == direction else turning_acceleration
 	
 	# Accelerate
 	velocity.x += direction * accel_rate * delta
-	
-	set_direction(direction) # This is purely for visuals
-
-
-func set_direction(hor_direction) -> void:
-	# This is purely for visuals
-	# Turning relies on the scale of the player
-	# To animate, only scale the sprite
-	if hor_direction == 0:
-		return
-	apply_scale(Vector2(hor_direction * face_direction, 1)) # flip
-	face_direction = hor_direction # remember direction
 
 
 func jump_logic(_delta: float) -> void:
@@ -143,10 +150,3 @@ func timers(delta: float) -> void:
 	jump_coyote_timer -= delta
 	jump_buffer_timer -= delta
 
-# Peer id.
-@export var peer_id: int: 
-	set(value):
-		peer_id = value
-		name = str(peer_id)
-		$Label.text = str(peer_id)
-		set_multiplayer_authority(peer_id)
