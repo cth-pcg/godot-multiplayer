@@ -12,7 +12,7 @@ var menu: Control = null
 var map: Node = null
 
 
-func _ready():
+func _ready() -> void:
 	menu = preload("res://scenes/menu.tscn").instantiate()
 	main.add_child(menu)
 	
@@ -21,7 +21,7 @@ func _ready():
 	multiplayer.peer_disconnected.connect(remove_player)
 
 
-func load_map():
+func load_map() -> void:
 	# Free old stuff.
 	if map != null:
 		map.queue_free()
@@ -36,13 +36,13 @@ func load_map():
 	spawn_player(multiplayer.get_unique_id())
 
 
-func spawn_player(id: int):
+func spawn_player(id: int) -> void:
 	var player = preload("res://scenes/player_2d.tscn").instantiate()
 	player.peer_id = id
 	players.add_child(player, true)
 
 
-func remove_player(id: int):
+func remove_player(id: int) -> void:
 	if not players.has_node(str(id)):
 		return
 	players.get_node(str(id)).queue_free()
