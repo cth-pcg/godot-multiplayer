@@ -23,10 +23,6 @@ polygon = PackedVector2Array(0, -32, 0, 0, 32, 0, 32, -32)
 [node name="Polygon2D" type="Polygon2D" parent="Sprite"]
 polygon = PackedVector2Array(0, 0, 0, -32, 0, -32, 0, -32, 32, -32, 32, 0)
 
-[node name="Outline" type="Polygon2D" parent="Sprite"]
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(0, -32, 2, -30, 2, -2, 30, -2, 30, -30, 2, -30, 0, -32, 32, -32, 32, 0, 0, 0)
-
 [node name="Label" type="Label" parent="."]
 offset_top = -56.0
 offset_right = 32.0
