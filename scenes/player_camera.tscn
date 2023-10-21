@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dokxdympy7epx"]
+
+[node name="PlayerCamera" type="Camera2D"]
+position_smoothing_enabled = true
+position_smoothing_speed = 12.0

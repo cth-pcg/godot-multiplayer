@@ -8,34 +8,32 @@ extends CharacterBody2D
 ## Except for separate air and ground acceleration, as I don't think it's necessary.
 
 
-# BASIC MOVEMENT VARAIABLES ---------------- #
-var input_dir: float = 1
+# BASIC MOVEMENT VARAIABLES
+var input_dir: float = 0
 
 @export var max_speed: float = 560
 @export var acceleration: float = 2880
 @export var turning_acceleration: float = 9600
 @export var deceleration: float = 3200
-# ------------------------------------------ #
 
-# GRAVITY ----- #
+# GRAVITY
 @export var gravity_acceleration: float = 3840
 @export var gravity_max: float = 1020
-# ------------- #
 
-# JUMP VARAIABLES ------------------- #
+# JUMP VARAIABLES
 @export var jump_force: float = 1400
-@export var jump_cut: float = 0.25
+@export var jump_cut: float = .25
 @export var jump_gravity_max: float = 500
-@export var jump_hang_treshold: float = 2.0
-@export var jump_hang_gravity_mult: float = 0.1
+@export var jump_hang_treshold: float = 2.
+@export var jump_hang_gravity_mult: float = .1
+
 # Timers
-@export var jump_coyote: float = 0.08
-@export var jump_buffer: float = 0.1
+@export var jump_coyote: float = .08
+@export var jump_buffer: float = .1
 
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
 var is_jumping: bool = false
-# ----------------------------------- #
 
 var previous_velocity: Vector2 = Vector2(0, 0)
 
@@ -48,15 +46,16 @@ var previous_velocity: Vector2 = Vector2(0, 0)
 		set_multiplayer_authority(peer_id)
 
 @onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
+@onready var cam_scene: PackedScene = preload("res://scenes/player_camera.tscn")
 
 
 func _ready():
 	# Set local camera.
 	if peer_id == multiplayer.get_unique_id():
-		var cam: Camera2D = Camera2D.new()
-		add_child(cam)
+		var cam_inst: Camera2D = cam_scene.instantiate()
+		add_child(cam_inst)
 	# Set process functions for current player.
-	var is_local = is_multiplayer_authority()
+	var is_local := is_multiplayer_authority()
 	set_process_input(is_local)
 	set_physics_process(is_local)
 	set_process(is_local)
@@ -64,11 +63,11 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	input_dir = Input.get_axis("move_left", "move_right")
+	
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
 	animation()
-	
 	timers(delta)
 	move_and_slide()
 
