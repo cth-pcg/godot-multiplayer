@@ -9,7 +9,7 @@ extends CharacterBody2D
 
 
 # BASIC MOVEMENT VARAIABLES ---------------- #
-var direction: float = 1
+var input_dir: float = 1
 
 @export var max_speed: float = 560
 @export var acceleration: float = 2880
@@ -37,6 +37,8 @@ var jump_buffer_timer: float = 0
 var is_jumping: bool = false
 # ----------------------------------- #
 
+var previous_velocity: Vector2 = Vector2(0, 0)
+
 # Peer id.
 @export var peer_id: int: 
 	set(value):
@@ -44,6 +46,8 @@ var is_jumping: bool = false
 		name = str(peer_id)
 		$Label.text = str(peer_id)
 		set_multiplayer_authority(peer_id)
+
+@onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
 
 
 func _ready():
@@ -59,10 +63,11 @@ func _ready():
 
 
 func _physics_process(delta: float) -> void:
-	direction = Input.get_axis("move_left", "move_right")
+	input_dir = Input.get_axis("move_left", "move_right")
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
+	animation()
 	
 	timers(delta)
 	move_and_slide()
@@ -70,22 +75,22 @@ func _physics_process(delta: float) -> void:
 
 func x_movement(delta: float) -> void:
 	# Stop if we're not doing movement inputs.
-	if not direction: 
+	if not input_dir: 
 		velocity.x = Vector2(velocity.x, 0).move_toward(Vector2(0, 0), deceleration * delta).x
 		return
 	
 	# If we are doing movement inputs and above max speed, don't accelerate nor decelerate
 	# Except if we are turning
 	# (This keeps our momentum gained from outside or slopes)
-	if abs(velocity.x) >= max_speed and sign(velocity.x) == direction:
+	if abs(velocity.x) >= max_speed and sign(velocity.x) == input_dir:
 		return
 	
 	# Are we turning?
 	# Deciding between acceleration and turn_acceleration
-	var accel_rate: float = acceleration if sign(velocity.x) == direction else turning_acceleration
+	var accel_rate: float = acceleration if sign(velocity.x) == input_dir else turning_acceleration
 	
 	# Accelerate
-	velocity.x += direction * accel_rate * delta
+	velocity.x += input_dir * accel_rate * delta
 
 
 func jump_logic(_delta: float) -> void:
@@ -142,6 +147,14 @@ func apply_gravity(delta: float) -> void:
 		applied_gravity *= jump_hang_gravity_mult
 	
 	velocity.y += applied_gravity
+
+
+func animation() -> void:
+	if previous_velocity.y >= 0 and velocity.y < 0:
+		animator.play("jump")
+	elif previous_velocity.y > 0 and is_on_floor():
+		animator.play("land")
+	previous_velocity = velocity
 
 
 func timers(delta: float) -> void:
