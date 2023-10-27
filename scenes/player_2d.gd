@@ -46,7 +46,7 @@ var hp: int = 10
 	set(value):
 		peer_id = value
 		name = str(peer_id)
-		$Label.text = str(peer_id)
+		$IDLabel.text = "ID: " + str(peer_id)
 		set_multiplayer_authority(peer_id)
 
 @onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
@@ -76,6 +76,8 @@ func _physics_process(delta: float) -> void:
 	shooting_logic()
 	timers(delta)
 	move_and_slide()
+	
+	$HPLabel.text = "HP: " + str(hp)
 
 
 @rpc("any_peer", "call_local")

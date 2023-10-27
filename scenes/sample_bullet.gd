@@ -23,6 +23,6 @@ func _physics_process(delta) -> void:
 
 
 func _on_area_2d_body_entered(body) -> void:
-	if body is Player:
+	if body is Player and body.peer_id == multiplayer.get_unique_id():
 		body.hp -= DAMAGE
 	queue_free()
