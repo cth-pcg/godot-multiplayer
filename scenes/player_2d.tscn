@@ -69,6 +69,10 @@ properties/1/path = NodePath(".:peer_id")
 properties/1/spawn = true
 properties/1/sync = false
 properties/1/watch = false
+properties/2/path = NodePath("Muzzle:rotation")
+properties/2/spawn = true
+properties/2/sync = true
+properties/2/watch = false
 
 [node name="Player2D" type="CharacterBody2D"]
 collision_layer = 2
@@ -89,10 +93,14 @@ libraries = {
 "": SubResource("AnimationLibrary_pl6vb")
 }
 
-[node name="MuzzleRotation" type="Node2D" parent="."]
+[node name="Muzzle" type="Node2D" parent="."]
 
-[node name="Polygon2D" type="Polygon2D" parent="MuzzleRotation"]
-polygon = PackedVector2Array(16, -3, 24, -3, 24, 3, 16, 3)
+[node name="Polygon2D" type="Polygon2D" parent="Muzzle"]
+scale = Vector2(1.33333, 1)
+polygon = PackedVector2Array(0, -3, 24, -3, 24, 3, 0, 3)
+
+[node name="BulletSpawn" type="Marker2D" parent="Muzzle"]
+position = Vector2(32, 0)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -64.0

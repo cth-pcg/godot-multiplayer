@@ -157,12 +157,20 @@ func animation() -> void:
 	elif previous_velocity.y > 0 and is_on_floor():
 		animator.play("land")
 	previous_velocity = velocity
+	$Muzzle.look_at(get_global_mouse_position())
+
+
+@rpc("any_peer", "call_local")
+func shoot() -> void:
+	var b: CharacterBody2D = bullet.instantiate()
+	b.global_position = $Muzzle/BulletSpawn.global_position
+	b.rotation = $Muzzle.rotation
+	add_sibling(b)
+
 
 func shooting_logic() -> void:
 	if Input.is_action_just_pressed("shoot"):
-		var b: CharacterBody2D = bullet.instantiate()
-		b.global_position = global_position
-		add_sibling(b)
+		shoot.rpc()
 
 
 func timers(delta: float) -> void:
