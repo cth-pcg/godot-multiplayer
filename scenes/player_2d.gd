@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name Player
 ## This character controller was created with the intent of being a decent starting point for Platformers.
 ## 
 ## Instead of teaching the basics, I tried to implement more advanced considerations.
@@ -38,9 +39,10 @@ var jump_buffer_timer: float = 0
 var is_jumping: bool = false
 
 var previous_velocity: Vector2 = Vector2(0, 0)
+var hp: int = 10
 
 # Peer id.
-@export var peer_id: int: 
+@export var peer_id: int:
 	set(value):
 		peer_id = value
 		name = str(peer_id)
@@ -65,7 +67,8 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	input_dir = Input.get_axis("move_left", "move_right")
-	
+	if hp <= 0:
+		die.rpc()
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
@@ -75,9 +78,14 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
+@rpc("any_peer", "call_local")
+func die() -> void:
+	queue_free()
+
+
 func x_movement(delta: float) -> void:
 	# Stop if we're not doing movement inputs.
-	if not input_dir: 
+	if not input_dir:
 		velocity.x = Vector2(velocity.x, 0).move_toward(Vector2(0, 0), deceleration * delta).x
 		return
 	
@@ -165,7 +173,7 @@ func shoot() -> void:
 	var b: CharacterBody2D = bullet.instantiate()
 	b.global_position = $Muzzle/BulletSpawn.global_position
 	b.rotation = $Muzzle.rotation
-	add_sibling(b)
+	get_tree().root.add_child(b)
 
 
 func shooting_logic() -> void:
@@ -179,3 +187,6 @@ func timers(delta: float) -> void:
 	jump_coyote_timer -= delta
 	jump_buffer_timer -= delta
 
+
+func damage() -> void:
+	hp -= 1

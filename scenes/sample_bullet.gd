@@ -20,5 +20,7 @@ func _physics_process(delta) -> void:
 	move_and_slide()
 
 
-func _on_area_2d_body_entered(body: Node2D) -> void:
+func _on_area_2d_body_entered(body) -> void:
+	if body is Player:
+		body.damage()
 	queue_free()
