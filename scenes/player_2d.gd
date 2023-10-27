@@ -32,14 +32,6 @@ var input_dir: float = 0
 @export var jump_coyote: float = .08
 @export var jump_buffer: float = .1
 
-@export var bullet: PackedScene
-
-var jump_coyote_timer: float = 0
-var jump_buffer_timer: float = 0
-var is_jumping: bool = false
-
-var previous_velocity: Vector2 = Vector2(0, 0)
-var hp: int = 10
 
 # Peer id.
 @export var peer_id: int:
@@ -49,8 +41,19 @@ var hp: int = 10
 		$IDLabel.text = "ID: " + str(peer_id)
 		set_multiplayer_authority(peer_id)
 
-@onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
+@export var bullet: PackedScene
+
 @onready var cam_scene: PackedScene = preload("res://scenes/player_camera.tscn")
+@onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
+@onready var muzzle: Node2D = $Muzzle
+@onready var bullet_spawn: Marker2D = $Muzzle/BulletSpawn
+
+var jump_coyote_timer: float = 0
+var jump_buffer_timer: float = 0
+var is_jumping: bool = false
+
+var previous_velocity: Vector2 = Vector2(0, 0)
+var hp: int = 10
 
 
 func _ready():
@@ -167,14 +170,15 @@ func animation() -> void:
 	elif previous_velocity.y > 0 and is_on_floor():
 		animator.play("land")
 	previous_velocity = velocity
-	$Muzzle.look_at(get_global_mouse_position())
+	muzzle.look_at(get_global_mouse_position())
 
 
 @rpc("any_peer", "call_local")
 func shoot() -> void:
 	var b: CharacterBody2D = bullet.instantiate()
-	b.global_position = $Muzzle/BulletSpawn.global_position
-	b.rotation = $Muzzle.rotation
+	b.global_position = bullet_spawn.global_position
+	b.rotation = muzzle.rotation
+	b.shooter_id = peer_id
 	get_tree().root.add_child(b)
 
 

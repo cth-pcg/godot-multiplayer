@@ -9,6 +9,7 @@ const DAMAGE: int = 1
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 var direction: Vector2
+var shooter_id: int
 
 
 func _ready() -> void:
@@ -23,6 +24,6 @@ func _physics_process(delta) -> void:
 
 
 func _on_area_2d_body_entered(body) -> void:
-	if body is Player and body.peer_id == multiplayer.get_unique_id():
+	if body is Player and body.peer_id != shooter_id:
 		body.hp -= DAMAGE
 	queue_free()
