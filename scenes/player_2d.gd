@@ -162,6 +162,7 @@ func shooting_logic() -> void:
 	if Input.is_action_just_pressed("shoot"):
 		var b: CharacterBody2D = bullet.instantiate()
 		b.global_position = global_position
+		add_sibling(b)
 
 
 func timers(delta: float) -> void:

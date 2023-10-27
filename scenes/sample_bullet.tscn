@@ -1,11 +1,16 @@
-[gd_scene format=3 uid="uid://btb5ghxjsvd5m"]
+[gd_scene load_steps=2 format=3 uid="uid://btb5ghxjsvd5m"]
+
+[ext_resource type="Script" path="res://scenes/sample_bullet.gd" id="1_a3jsc"]
 
 [node name="SampleBullet" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_a3jsc")
 
 [node name="Sprite" type="Node2D" parent="."]
 
 [node name="Polygon2D" type="Polygon2D" parent="Sprite"]
-polygon = PackedVector2Array(-1, -1, -1, 1, 1, 1, 1, -1)
+polygon = PackedVector2Array(-2, -1, -2, 1, -1, 2, 1, 2, 2, 1, 2, -1, 1, -2, -1, -2)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-1, -1, -1, 1, 1, 1, 1, -1)
+polygon = PackedVector2Array(-2, -1, -2, 1, -1, 2, 1, 2, 2, 1, 2, -1, 1, -2, -1, -2)

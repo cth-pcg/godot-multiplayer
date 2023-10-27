@@ -71,6 +71,8 @@ properties/1/sync = false
 properties/1/watch = false
 
 [node name="Player2D" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_dcxls")
 bullet = ExtResource("2_obknb")
 
@@ -86,6 +88,11 @@ polygon = PackedVector2Array(-16, 16, -16, -16, 16, -16, 16, 16)
 libraries = {
 "": SubResource("AnimationLibrary_pl6vb")
 }
+
+[node name="MuzzleRotation" type="Node2D" parent="."]
+
+[node name="Polygon2D" type="Polygon2D" parent="MuzzleRotation"]
+polygon = PackedVector2Array(16, -3, 24, -3, 24, 3, 16, 3)
 
 [node name="Label" type="Label" parent="."]
 offset_left = -64.0
