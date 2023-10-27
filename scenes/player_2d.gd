@@ -31,6 +31,8 @@ var input_dir: float = 0
 @export var jump_coyote: float = .08
 @export var jump_buffer: float = .1
 
+@export var bullet: PackedScene
+
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
 var is_jumping: bool = false
@@ -68,6 +70,7 @@ func _physics_process(delta: float) -> void:
 	jump_logic(delta)
 	apply_gravity(delta)
 	animation()
+	shooting_logic()
 	timers(delta)
 	move_and_slide()
 
@@ -154,6 +157,11 @@ func animation() -> void:
 	elif previous_velocity.y > 0 and is_on_floor():
 		animator.play("land")
 	previous_velocity = velocity
+
+func shooting_logic() -> void:
+	if Input.is_action_just_pressed("shoot"):
+		var b: CharacterBody2D = bullet.instantiate()
+		b.global_position = global_position
 
 
 func timers(delta: float) -> void:
