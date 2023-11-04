@@ -24,6 +24,9 @@ func _physics_process(delta) -> void:
 
 
 func _on_area_2d_body_entered(body) -> void:
-	if body is Player and body.peer_id != shooter_id:
-		body.hp -= DAMAGE
+	if body is Player:
+		if body.peer_id != shooter_id:
+			body.hp -= DAMAGE
+		if not body.hp:
+			body.killer_id = shooter_id
 	queue_free()

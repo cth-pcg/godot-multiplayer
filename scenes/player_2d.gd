@@ -43,7 +43,7 @@ var input_dir: float = 0
 
 @export var bullet: PackedScene
 
-@onready var cam_scene: PackedScene = preload("res://scenes/player_camera.tscn")
+@onready var camera: Camera2D = preload("res://scenes/player_camera.tscn").instantiate()
 @onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
 @onready var muzzle: Node2D = $Muzzle
 @onready var bullet_spawn: Marker2D = $Muzzle/BulletSpawn
@@ -51,6 +51,7 @@ var input_dir: float = 0
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
 var is_jumping: bool = false
+var killer_id: int
 
 var previous_velocity: Vector2 = Vector2(0, 0)
 var hp: int = 10
@@ -59,10 +60,9 @@ var hp: int = 10
 func _ready():
 	# Set local camera.
 	if peer_id == multiplayer.get_unique_id():
-		var cam_inst: Camera2D = cam_scene.instantiate()
-		add_child(cam_inst)
+		add_child(camera)
 	# Set process functions for current player.
-	var is_local := is_multiplayer_authority()
+	var is_local: bool = is_multiplayer_authority()
 	set_process_input(is_local)
 	set_physics_process(is_local)
 	set_process(is_local)
@@ -70,8 +70,7 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	input_dir = Input.get_axis("move_left", "move_right")
-	if hp <= 0:
-		die.rpc()
+	died_logic()
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
@@ -83,8 +82,17 @@ func _physics_process(delta: float) -> void:
 	$HPLabel.text = "HP: " + str(hp)
 
 
+func died_logic() -> void:
+	if hp:
+		return
+	poof.rpc()
+	if peer_id == multiplayer.get_unique_id():
+		camera.reparent(Game.players.get_node(str(killer_id)))
+		camera.position = Vector2(0, 0)
+
+
 @rpc("any_peer", "call_local")
-func die() -> void:
+func poof() -> void:
 	queue_free()
 
 
