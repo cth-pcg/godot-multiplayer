@@ -7,6 +7,7 @@ const PORT: int = 1337
 
 @onready var main: Node = get_tree().root.get_node("Main")
 @onready var players: Node = main.get_node("Players")
+@onready var player_scene: PackedScene = preload("res://scenes/player_2d.tscn")
 
 var menu: Control = null
 var map: Node = null
@@ -37,7 +38,7 @@ func load_map() -> void:
 
 
 func spawn_player(id: int) -> void:
-	var player = preload("res://scenes/player_2d.tscn").instantiate()
+	var player: Player = player_scene.instantiate()
 	player.peer_id = id
 	players.add_child(player, true)
 

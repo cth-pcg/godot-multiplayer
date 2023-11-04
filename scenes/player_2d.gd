@@ -47,6 +47,7 @@ var input_dir: float = 0
 @onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
 @onready var muzzle: Node2D = $Muzzle
 @onready var bullet_spawn: Marker2D = $Muzzle/BulletSpawn
+@onready var spawn_point: Vector2 = global_position
 
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
@@ -54,10 +55,17 @@ var is_jumping: bool = false
 var killer_id: int
 
 var previous_velocity: Vector2 = Vector2(0, 0)
-var hp: int = 10
+var MAX_HP: int = 10
+var hp: int
+
+
+func initialize() -> void:
+	hp = MAX_HP
+	global_position = spawn_point
 
 
 func _ready():
+	initialize()
 	# Set local camera.
 	if peer_id == multiplayer.get_unique_id():
 		add_child(camera)
@@ -71,6 +79,7 @@ func _ready():
 func _physics_process(delta: float) -> void:
 	input_dir = Input.get_axis("move_left", "move_right")
 	died_logic()
+	respawn_logic()
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
@@ -94,6 +103,11 @@ func died_logic() -> void:
 @rpc("any_peer", "call_local")
 func poof() -> void:
 	queue_free()
+
+
+func respawn_logic() -> void:
+	if Input.is_action_just_pressed("respawn"):
+		initialize()
 
 
 func x_movement(delta: float) -> void:
