@@ -59,9 +59,12 @@ var MAX_HP: int = 10
 var hp: int
 
 
+@rpc("any_peer", "call_local")
 func initialize() -> void:
 	hp = MAX_HP
 	global_position = spawn_point
+	camera.reparent(self)
+	queue_redraw()
 
 
 func _ready():
@@ -79,7 +82,6 @@ func _ready():
 func _physics_process(delta: float) -> void:
 	input_dir = Input.get_axis("move_left", "move_right")
 	died_logic()
-	respawn_logic()
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
@@ -103,11 +105,6 @@ func died_logic() -> void:
 @rpc("any_peer", "call_local")
 func poof() -> void:
 	queue_free()
-
-
-func respawn_logic() -> void:
-	if Input.is_action_just_pressed("respawn"):
-		initialize()
 
 
 func x_movement(delta: float) -> void:

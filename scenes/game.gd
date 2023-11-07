@@ -47,3 +47,8 @@ func remove_player(id: int) -> void:
 	if not players.has_node(str(id)):
 		return
 	players.get_node(str(id)).queue_free()
+
+
+func respawn_player(id: int) -> void:
+	if Input.is_action_just_pressed("respawn"):
+		players.get_node(str(id)).initialize.rpc()
