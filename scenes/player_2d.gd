@@ -45,8 +45,8 @@ var input_dir: float = 0
 
 @onready var camera: Camera2D = preload("res://scenes/player_camera.tscn").instantiate()
 @onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
-@onready var muzzle: Node2D = $Muzzle
-@onready var bullet_spawn: Marker2D = $Muzzle/BulletSpawn
+@onready var muzzle: Node2D = $Sprite/Muzzle
+@onready var bullet_spawn: Marker2D = muzzle.get_node("BulletSpawn")
 @onready var spawn_point: Vector2 = global_position
 
 var jump_coyote_timer: float = 0
@@ -207,6 +207,7 @@ func shoot() -> void:
 func shooting_logic() -> void:
 	if Input.is_action_just_pressed("shoot"):
 		shoot.rpc()
+		animator.play("shoot")
 
 
 func timers(delta: float) -> void:
