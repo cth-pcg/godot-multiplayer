@@ -81,14 +81,17 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	input_dir = Input.get_axis("move_left", "move_right")
-	died_logic()
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
 	animation()
 	shooting_logic()
+	respawn_logic()
 	timers(delta)
+	
 	move_and_slide()
+	
+	died_logic()
 	
 	$HPLabel.text = "HP: " + str(hp)
 
@@ -212,3 +215,8 @@ func timers(delta: float) -> void:
 	# This way everything is contained in just 1 script with no node requirements
 	jump_coyote_timer -= delta
 	jump_buffer_timer -= delta
+
+
+func respawn_logic() -> void:
+	if Input.is_action_just_pressed("respawn"):
+		initialize.rpc()
