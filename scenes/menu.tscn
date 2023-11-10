@@ -52,11 +52,13 @@ middle_mouse_paste_enabled = false
 layout_mode = 2
 
 [node name="Create" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
 text = "Create Server"
 
 [node name="Connect" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
 text = "Connect as Client"
