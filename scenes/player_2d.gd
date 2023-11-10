@@ -63,8 +63,6 @@ var hp: int
 func initialize() -> void:
 	hp = MAX_HP
 	global_position = spawn_point
-	camera.reparent(self)
-	queue_redraw()
 
 
 func _ready():

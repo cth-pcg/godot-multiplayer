@@ -3,12 +3,11 @@
 # Manages game states
 extends Node
 
-const PORT: int = 1337
-
 @onready var main: Node = get_tree().root.get_node("Main")
 @onready var players: Node = main.get_node("Players")
 @onready var player_scene: PackedScene = preload("res://scenes/player_2d.tscn")
 
+var port: int
 var menu: Control = null
 var map: Node = null
 
