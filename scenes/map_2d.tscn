@@ -12,3 +12,17 @@ polygon = PackedVector2Array(-128, 328, -128, 312, 768, 312, 768, 328)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Floor"]
 polygon = PackedVector2Array(-128, 312, -128, 328, 768, 328, 768, 312)
+
+[node name="PlayerSpawn" type="Node2D" parent="."]
+
+[node name="1" type="Marker2D" parent="PlayerSpawn"]
+position = Vector2(-64, 192)
+
+[node name="2" type="Marker2D" parent="PlayerSpawn"]
+position = Vector2(192, 192)
+
+[node name="3" type="Marker2D" parent="PlayerSpawn"]
+position = Vector2(448, 192)
+
+[node name="4" type="Marker2D" parent="PlayerSpawn"]
+position = Vector2(704, 192)
