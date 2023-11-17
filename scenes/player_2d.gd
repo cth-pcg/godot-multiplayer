@@ -94,6 +94,13 @@ func _physics_process(delta: float) -> void:
 	$HPBar.value = hp
 
 
+func HPBar() -> void:
+	if hp > 3:
+		set("theme_override_styles/fill", null)
+	else:
+		set("theme_override_styles/fill", load("res://resorces/new_style_box_flat.tres"))
+
+
 func died_logic() -> void:
 	if hp:
 		return
