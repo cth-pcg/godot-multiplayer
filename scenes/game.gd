@@ -37,13 +37,23 @@ func load_map() -> void:
 
 
 func spawn_player(id: int) -> void:
-	var player: Player = player_scene.instantiate()
-	player.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
-	player.peer_id = id
-	players.add_child(player, true)
+	var p: Player = player_scene.instantiate()
+	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
+	p.peer_id = id
+	players.add_child(p, true)
+
+
+func respawn_player(id: int) -> void:
+	var p: Player
+	if not players.has_node(str(id)):
+		p = player_scene.instantiate()
+	else:
+		p = players.get_node(str(id))
+	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
+	p.camera.reparent(p)
+	p.hp = p.MAX_HP
 
 
 func remove_player(id: int) -> void:
-	if not players.has_node(str(id)):
-		return
-	players.get_node(str(id)).queue_free()
+	if players.has_node(str(id)):
+		players.get_node(str(id)).queue_free()

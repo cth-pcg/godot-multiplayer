@@ -56,16 +56,10 @@ var killer_id: int
 
 var previous_velocity: Vector2 = Vector2(0, 0)
 var MAX_HP: int = 10
-var hp: int
-
-
-func initialize() -> void:
-	hp = MAX_HP
-	global_position = spawn_point
+var hp: int = MAX_HP
 
 
 func _ready():
-	initialize()
 	# Set local camera.
 	if peer_id == multiplayer.get_unique_id():
 		add_child(camera)
@@ -217,4 +211,4 @@ func timers(delta: float) -> void:
 
 func respawn_logic() -> void:
 	if Input.is_action_just_pressed("respawn"):
-		initialize()
+		Game.respawn_player(peer_id)
