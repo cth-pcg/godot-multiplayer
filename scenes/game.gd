@@ -38,6 +38,7 @@ func load_map() -> void:
 
 func spawn_player(id: int) -> void:
 	var player: Player = player_scene.instantiate()
+	player.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
 	player.peer_id = id
 	players.add_child(player, true)
 
