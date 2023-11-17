@@ -59,7 +59,6 @@ var MAX_HP: int = 10
 var hp: int
 
 
-@rpc("any_peer", "call_local")
 func initialize() -> void:
 	hp = MAX_HP
 	global_position = spawn_point
@@ -91,7 +90,8 @@ func _physics_process(delta: float) -> void:
 	
 	died_logic()
 	
-	$HPLabel.text = "HP: " + str(hp)
+	$HPBar.max_value = MAX_HP
+	$HPBar.value = hp
 
 
 func died_logic() -> void:
@@ -217,4 +217,4 @@ func timers(delta: float) -> void:
 
 func respawn_logic() -> void:
 	if Input.is_action_just_pressed("respawn"):
-		initialize.rpc()
+		initialize()
