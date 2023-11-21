@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/map_2d.gd" id="1_hajy4"]
 
-
 [node name="Map2D" type="Node2D"]
 script = ExtResource("1_hajy4")
 

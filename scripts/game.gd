@@ -21,6 +21,10 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(remove_player)
 
 
+func _process(_delta: float) -> void:
+	respawn_logic.rpc()
+
+
 func load_map() -> void:
 	# Free old stuff.
 	if map != null:
@@ -43,15 +47,17 @@ func spawn_player(id: int) -> void:
 	players.add_child(p, true)
 
 
-func respawn_player(id: int) -> void:
+@rpc("any_peer", "call_local")
+func respawn_logic() -> void:
+	if not Input.is_action_just_pressed("respawn"):
+		return
 	var p: Player
-	if not players.has_node(str(id)):
-		p = player_scene.instantiate()
+	if players.has_node(str(multiplayer.get_unique_id())):
+		p = players.get_node(str(multiplayer.get_unique_id()))
 	else:
-		p = players.get_node(str(id))
+		p = player_scene.instantiate()
+		players.add_child(p)
 	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
-	p.camera.reparent(p)
-	p.hp = p.MAX_HP
 
 
 func remove_player(id: int) -> void:

@@ -75,31 +75,16 @@ func _physics_process(delta: float) -> void:
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
-	animation()
 	shooting_logic()
-	respawn_logic()
 	timers(delta)
 	
 	move_and_slide()
+	animation()
 	
-	died_logic()
+	die_logic()
 	
 	$HPBar.max_value = MAX_HP
 	$HPBar.value = hp
-
-
-func died_logic() -> void:
-	if hp:
-		return
-	poof.rpc()
-	if peer_id == multiplayer.get_unique_id():
-		camera.reparent(Game.players.get_node(str(killer_id)))
-		camera.position = Vector2(0, 0)
-
-
-@rpc("any_peer", "call_local")
-func poof() -> void:
-	queue_free()
 
 
 func x_movement(delta: float) -> void:
@@ -178,13 +163,10 @@ func apply_gravity(delta: float) -> void:
 	velocity.y += applied_gravity
 
 
-func animation() -> void:
-	if previous_velocity.y >= 0 and velocity.y < 0:
-		animator.play("jump")
-	elif previous_velocity.y > 0 and is_on_floor():
-		animator.play("land")
-	previous_velocity = velocity
-	muzzle.look_at(get_global_mouse_position())
+func shooting_logic() -> void:
+	if Input.is_action_just_pressed("shoot"):
+		shoot.rpc()
+		animator.play("shoot")
 
 
 @rpc("any_peer", "call_local")
@@ -196,12 +178,6 @@ func shoot() -> void:
 	get_tree().root.add_child(b)
 
 
-func shooting_logic() -> void:
-	if Input.is_action_just_pressed("shoot"):
-		shoot.rpc()
-		animator.play("shoot")
-
-
 func timers(delta: float) -> void:
 	# Using timer nodes here would mean unnececary functions and node calls
 	# This way everything is contained in just 1 script with no node requirements
@@ -209,6 +185,20 @@ func timers(delta: float) -> void:
 	jump_buffer_timer -= delta
 
 
-func respawn_logic() -> void:
-	if Input.is_action_just_pressed("respawn"):
-		Game.respawn_player(peer_id)
+func animation() -> void:
+	if previous_velocity.y >= 0 and velocity.y < 0:
+		animator.play("jump")
+	elif previous_velocity.y > 0 and is_on_floor():
+		animator.play("land")
+	previous_velocity = velocity
+	muzzle.look_at(get_global_mouse_position())
+
+
+func die_logic() -> void:
+	if not hp:
+		die.rpc()
+
+
+@rpc("any_peer", "call_local")
+func die() -> void:
+	queue_free()
