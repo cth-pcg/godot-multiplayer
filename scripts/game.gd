@@ -6,6 +6,8 @@ extends Node
 @onready var main: Node = get_tree().root.get_node("Main")
 @onready var players: Node = main.get_node("Players")
 @onready var player_scene: PackedScene = preload("res://scenes/player_2d.tscn")
+@onready var observers: Node = main.get_node("Observers")
+@onready var observer_scene: PackedScene = preload("res://scenes/observer_camera.tscn")
 
 var port: int
 var menu: Control = null
@@ -58,6 +60,11 @@ func respawn_logic() -> void:
 		p = player_scene.instantiate()
 		players.add_child(p)
 	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
+
+
+func spawn_observer() -> void:
+	var o = observer_scene.instantiate()
+	observers.add_child(o)
 
 
 func remove_player(id: int) -> void:
