@@ -3,10 +3,3 @@
 [node name="PlayerCamera" type="Camera2D"]
 position_smoothing_enabled = true
 position_smoothing_speed = 36.0
-
-[node name="Label" type="Label" parent="."]
-offset_left = -544.0
-offset_top = -292.0
-offset_right = -455.0
-offset_bottom = -266.0
-text = "R: Respawn"

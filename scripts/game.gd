@@ -6,8 +6,8 @@ extends Node
 @onready var main: Node = get_tree().root.get_node("Main")
 @onready var players: Node = main.get_node("Players")
 @onready var player_scene: PackedScene = preload("res://scenes/player_2d.tscn")
-@onready var observers: Node = main.get_node("Observers")
-@onready var observer_scene: PackedScene = preload("res://scenes/observer_camera.tscn")
+@onready var spectators: Node = main.get_node("Observers")
+@onready var spectator_scene: PackedScene = preload("res://scenes/spectator_camera.tscn")
 
 var port: int
 var menu: Control = null
@@ -23,12 +23,8 @@ func _ready() -> void:
 	multiplayer.peer_disconnected.connect(remove_player)
 
 
-func _process(_delta: float) -> void:
-	respawn_logic.rpc()
-
-
 func load_map() -> void:
-	# Free old stuff.
+	# #Free old stuff.
 	if map != null:
 		map.queue_free()
 	if menu != null:
@@ -39,32 +35,22 @@ func load_map() -> void:
 	main.add_child(map)
 	
 	# if multiplayer.is_server():
-	spawn_player(multiplayer.get_unique_id())
+	var id = multiplayer.get_unique_id()
+	print(1, " ", id)
+	spawn_player(id)
 
 
 func spawn_player(id: int) -> void:
 	var p: Player = player_scene.instantiate()
 	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
 	p.peer_id = id
+	print(multiplayer.is_server(), " ", p.peer_id)
 	players.add_child(p, true)
 
 
-@rpc("any_peer", "call_local")
-func respawn_logic() -> void:
-	if not Input.is_action_just_pressed("respawn"):
-		return
-	var p: Player
-	if players.has_node(str(multiplayer.get_unique_id())):
-		p = players.get_node(str(multiplayer.get_unique_id()))
-	else:
-		p = player_scene.instantiate()
-		players.add_child(p)
-	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
-
-
-func spawn_observer() -> void:
-	var o = observer_scene.instantiate()
-	observers.add_child(o)
+func spawn_spectator() -> void:
+	var o = spectator_scene.instantiate()
+	spectators.add_child(o)
 
 
 func remove_player(id: int) -> void:

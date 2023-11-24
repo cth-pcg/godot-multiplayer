@@ -197,8 +197,7 @@ func animation() -> void:
 func die_logic() -> void:
 	if not hp:
 		die.rpc()
-		Game.spawn_observer()
-	
+		Game.spawn_spectator()
 
 
 @rpc("any_peer", "call_local")
