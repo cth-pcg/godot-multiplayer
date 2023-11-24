@@ -1,8 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://c1db8f528oskp"]
+[gd_scene load_steps=10 format=3 uid="uid://c1db8f528oskp"]
 
 [ext_resource type="Script" path="res://scenes/player_2d.gd" id="1_dcxls"]
 [ext_resource type="PackedScene" uid="uid://btb5ghxjsvd5m" path="res://scenes/sample_bullet.tscn" id="2_obknb"]
-[ext_resource type="Theme" uid="uid://dcgxpbm0b4nu7" path="res://resorces/new_theme.tres" id="3_hsyd8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ciyjc"]
 size = Vector2(32, 32)
@@ -163,7 +162,6 @@ text = "ID: 0"
 horizontal_alignment = 1
 
 [node name="HPBar" type="ProgressBar" parent="."]
-show_behind_parent = true
 light_mask = 513
 visibility_layer = 513
 anchors_preset = 7
@@ -178,8 +176,9 @@ offset_bottom = -41.0
 grow_horizontal = 2
 grow_vertical = 0
 pivot_offset = Vector2(50, 30)
-theme = ExtResource("3_hsyd8")
+size_flags_stretch_ratio = 0.0
 step = 1.0
+value = 5.0
 show_percentage = false
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
