@@ -166,23 +166,10 @@ text = "ID: 0"
 horizontal_alignment = 1
 
 [node name="HPBar" type="ProgressBar" parent="."]
-light_mask = 513
-visibility_layer = 513
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
 offset_left = -50.0
-offset_top = -51.0
+offset_top = -50.0
 offset_right = 50.0
-offset_bottom = -41.0
-grow_horizontal = 2
-grow_vertical = 0
-pivot_offset = Vector2(50, 30)
-size_flags_stretch_ratio = 0.0
-step = 1.0
-value = 5.0
+offset_bottom = -40.0
 show_percentage = false
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
