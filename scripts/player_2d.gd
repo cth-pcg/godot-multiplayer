@@ -209,11 +209,11 @@ func hp_bar_update() -> void:
 	$HPBar.max_value = max_hp
 	$HPBar.value = hp
 	if hp == max_hp:
-			$HPBar.set("theme_override_styles/fill", max_hp_clr)
+		$HPBar.set("theme_override_styles/fill", max_hp_clr)
 	elif hp > 4:
-			$HPBar.set("theme_override_styles/fill", null)
+		$HPBar.set("theme_override_styles/fill", null)
 	else :
-			$HPBar.set("theme_override_styles/fill", low_hp_clr)
+		$HPBar.set("theme_override_styles/fill", low_hp_clr)
 
 
 func timers(delta: float) -> void:
