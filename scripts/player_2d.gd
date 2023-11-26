@@ -58,8 +58,8 @@ var is_shooting: bool
 var killer_id: int
 
 var previous_velocity: Vector2 = Vector2(0, 0)
-var MAX_HP: float = 10
-var hp: float = MAX_HP
+@export var max_hp: float = 10
+@export var hp: float = max_hp
 
 
 func _ready():
@@ -74,45 +74,31 @@ func _ready():
 
 
 func _physics_process(delta: float) -> void:
+	debug()
+	
 	input_dir = Input.get_axis("move_left", "move_right")
 	x_movement(delta)
 	jump_logic(delta)
 	apply_gravity(delta)
+	
 	shooting_logic()
 	
-	debug()
-	
-	timers(delta)
 	move_and_slide()
+	
 	animation()
 	hp_bar_update.rpc()
 	
+	timers(delta)
 	die_logic()
-	
 
 
-@rpc("any_peer", "call_local")
-func hp_bar_update() -> void:
-	$HPBar.max_value = MAX_HP
-	$HPBar.value = hp
-	if hp == MAX_HP:
-			$HPBar.set("theme_override_styles/fill", max_hp_clr)
-	elif hp > 4:
-			$HPBar.set("theme_override_styles/fill", null)
-	else :
-			$HPBar.set("theme_override_styles/fill", low_hp_clr)
-
-
-func die_logic() -> void:
-	if hp <= 0:
-		die.rpc()
-
-
-@rpc("any_peer", "call_local")
-func die() -> void:
-	queue_free()
-	if peer_id == multiplayer.get_unique_id():
-		Game.spawn_spectator()
+func debug() -> void:
+	if Input.is_action_just_pressed("3"):
+		die()
+	if Input.is_action_just_pressed("2"):
+		heal(1)
+	if Input.is_action_just_pressed("1"):
+		damage(1)
 
 
 func x_movement(delta: float) -> void:
@@ -207,22 +193,6 @@ func shoot() -> void:
 	get_tree().root.add_child(b)
 
 
-func debug() -> void:
-	if Input.is_action_just_pressed("3"):
-		die()
-	if Input.is_action_just_pressed("2"):
-		heal(1)
-	if Input.is_action_just_pressed("1"):
-		damage(1)
-
-
-func timers(delta: float) -> void:
-	# Using timer nodes here would mean unnececary functions and node calls
-	# This way everything is contained in just 1 script with no node requirements
-	jump_coyote_timer -= delta
-	jump_buffer_timer -= delta
-
-
 func animation() -> void:
 	if is_shooting:
 		animator.play("shoot")
@@ -234,10 +204,41 @@ func animation() -> void:
 	muzzle.look_at(get_global_mouse_position())
 
 
+@rpc("any_peer", "call_local")
+func hp_bar_update() -> void:
+	$HPBar.max_value = max_hp
+	$HPBar.value = hp
+	if hp == max_hp:
+			$HPBar.set("theme_override_styles/fill", max_hp_clr)
+	elif hp > 4:
+			$HPBar.set("theme_override_styles/fill", null)
+	else :
+			$HPBar.set("theme_override_styles/fill", low_hp_clr)
+
+
+func timers(delta: float) -> void:
+	# Using timer nodes here would mean unnececary functions and node calls
+	# This way everything is contained in just 1 script with no node requirements
+	jump_coyote_timer -= delta
+	jump_buffer_timer -= delta
+
+
+func die_logic() -> void:
+	if hp <= 0:
+		die.rpc()
+
+
+@rpc("any_peer", "call_local")
+func die() -> void:
+	queue_free()
+	if peer_id == multiplayer.get_unique_id():
+		Game.spawn_spectator()
+
+
 func damage(p: float) -> void:
 	hp -= p
 
 
 func heal(p: float) -> void:
 	hp += p
-	hp = min(MAX_HP, hp)
+	hp = min(max_hp, hp)
