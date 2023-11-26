@@ -48,22 +48,18 @@ var input_dir: float = 0
 @onready var muzzle: Node2D = $Sprite/Muzzle
 @onready var bullet_spawn: Marker2D = muzzle.get_node("BulletSpawn")
 @onready var spawn_point: Vector2 = global_position
-@onready var low: StyleBoxFlat = preload("res://resorces/low.tres")
-@onready var max_hp: StyleBoxFlat = preload("res://resorces/max.tres")
+@onready var low_hp_clr: StyleBoxFlat = preload("res://resorces/low.tres")
+@onready var max_hp_clr: StyleBoxFlat = preload("res://resorces/max.tres")
 
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
-var is_jumping: bool = false
+var is_jumping: bool
+var is_shooting: bool
 var killer_id: int
 
 var previous_velocity: Vector2 = Vector2(0, 0)
 var MAX_HP: float = 10
-var hp: float
-
-
-func initialize() -> void:
-	hp = MAX_HP
-	global_position = spawn_point
+var hp: float = MAX_HP
 
 
 func _ready():
@@ -83,43 +79,40 @@ func _physics_process(delta: float) -> void:
 	jump_logic(delta)
 	apply_gravity(delta)
 	shooting_logic()
-	timers(delta)
-	respawn_logic()
 	
 	debug()
 	
 	timers(delta)
 	move_and_slide()
 	animation()
-	HPBar()
+	hp_bar_update.rpc()
 	
 	die_logic()
 	
-	$HPBar.max_value = MAX_HP
-	$HPBar.value = hp
-
-
-func HPBar() -> void:
-	if hp == MAX_HP:
-			$HPBar.set("theme_override_styles/fill", max_hp)
-	elif hp > 4:
-			$HPBar.set("theme_override_styles/fill", null)
-	else :
-			$HPBar.set("theme_override_styles/fill", low)
-
-
-func died_logic() -> void:
-	if hp:
-		return
-	poof.rpc()
-	if peer_id == multiplayer.get_unique_id():
-		camera.reparent(Game.players.get_node(str(killer_id)))
-		camera.position = Vector2(0, 0)
 
 
 @rpc("any_peer", "call_local")
-func poof() -> void:
+func hp_bar_update() -> void:
+	$HPBar.max_value = MAX_HP
+	$HPBar.value = hp
+	if hp == MAX_HP:
+			$HPBar.set("theme_override_styles/fill", max_hp_clr)
+	elif hp > 4:
+			$HPBar.set("theme_override_styles/fill", null)
+	else :
+			$HPBar.set("theme_override_styles/fill", low_hp_clr)
+
+
+func die_logic() -> void:
+	if hp <= 0:
+		die.rpc()
+
+
+@rpc("any_peer", "call_local")
+func die() -> void:
 	queue_free()
+	if peer_id == multiplayer.get_unique_id():
+		Game.spawn_spectator()
 
 
 func x_movement(delta: float) -> void:
@@ -199,9 +192,10 @@ func apply_gravity(delta: float) -> void:
 
 
 func shooting_logic() -> void:
+	is_shooting = false
 	if Input.is_action_just_pressed("shoot"):
 		shoot.rpc()
-		animator.play("shoot")
+		is_shooting = true
 
 
 @rpc("any_peer", "call_local")
@@ -213,16 +207,12 @@ func shoot() -> void:
 	get_tree().root.add_child(b)
 
 
-func shooting_logic() -> void:
-	if Input.is_action_just_pressed("shoot"):
-		shoot.rpc()
-		animator.play("shoot")
-
-
 func debug() -> void:
-	if Input.is_action_just_pressed("heal"):
+	if Input.is_action_just_pressed("3"):
+		die()
+	if Input.is_action_just_pressed("2"):
 		heal(1)
-	if Input.is_action_just_pressed("damage"):
+	if Input.is_action_just_pressed("1"):
 		damage(1)
 
 
@@ -234,26 +224,14 @@ func timers(delta: float) -> void:
 
 
 func animation() -> void:
+	if is_shooting:
+		animator.play("shoot")
 	if previous_velocity.y >= 0 and velocity.y < 0:
 		animator.play("jump")
 	elif previous_velocity.y > 0 and is_on_floor():
 		animator.play("land")
 	previous_velocity = velocity
 	muzzle.look_at(get_global_mouse_position())
-
-
-func die_logic() -> void:
-	if not hp:
-		die.rpc()
-		Game.spawn_spectator()
-
-
-@rpc("any_peer", "call_local")
-func die() -> void:
-	queue_free()
-func respawn_logic() -> void:
-	if Input.is_action_just_pressed("respawn"):
-		initialize()
 
 
 func damage(p: float) -> void:

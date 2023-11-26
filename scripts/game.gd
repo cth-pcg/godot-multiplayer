@@ -6,7 +6,7 @@ extends Node
 @onready var main: Node = get_tree().root.get_node("Main")
 @onready var players: Node = main.get_node("Players")
 @onready var player_scene: PackedScene = preload("res://scenes/player_2d.tscn")
-@onready var spectators: Node = main.get_node("Observers")
+@onready var spectators: Node = main.get_node("Spectators")
 @onready var spectator_scene: PackedScene = preload("res://scenes/spectator_camera.tscn")
 
 var port: int
@@ -40,6 +40,7 @@ func load_map() -> void:
 	spawn_player(id)
 
 
+@rpc("any_peer", "call_local")
 func spawn_player(id: int) -> void:
 	var p: Player = player_scene.instantiate()
 	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
