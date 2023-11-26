@@ -48,6 +48,8 @@ var input_dir: float = 0
 @onready var muzzle: Node2D = $Sprite/Muzzle
 @onready var bullet_spawn: Marker2D = muzzle.get_node("BulletSpawn")
 @onready var spawn_point: Vector2 = global_position
+@onready var low: StyleBoxFlat = preload("res://resorces/low.tres")
+@onready var max_hp: StyleBoxFlat = preload("res://resorces/max.tres")
 
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
@@ -55,8 +57,13 @@ var is_jumping: bool = false
 var killer_id: int
 
 var previous_velocity: Vector2 = Vector2(0, 0)
-var MAX_HP: int = 10
-var hp: int = MAX_HP
+var MAX_HP: float = 10
+var hp: float
+
+
+func initialize() -> void:
+	hp = MAX_HP
+	global_position = spawn_point
 
 
 func _ready():
@@ -77,14 +84,42 @@ func _physics_process(delta: float) -> void:
 	apply_gravity(delta)
 	shooting_logic()
 	timers(delta)
+	respawn_logic()
 	
+	debug()
+	
+	timers(delta)
 	move_and_slide()
 	animation()
+	HPBar()
 	
 	die_logic()
 	
 	$HPBar.max_value = MAX_HP
 	$HPBar.value = hp
+
+
+func HPBar() -> void:
+	if hp == MAX_HP:
+			$HPBar.set("theme_override_styles/fill", max_hp)
+	elif hp > 4:
+			$HPBar.set("theme_override_styles/fill", null)
+	else :
+			$HPBar.set("theme_override_styles/fill", low)
+
+
+func died_logic() -> void:
+	if hp:
+		return
+	poof.rpc()
+	if peer_id == multiplayer.get_unique_id():
+		camera.reparent(Game.players.get_node(str(killer_id)))
+		camera.position = Vector2(0, 0)
+
+
+@rpc("any_peer", "call_local")
+func poof() -> void:
+	queue_free()
 
 
 func x_movement(delta: float) -> void:
@@ -178,6 +213,19 @@ func shoot() -> void:
 	get_tree().root.add_child(b)
 
 
+func shooting_logic() -> void:
+	if Input.is_action_just_pressed("shoot"):
+		shoot.rpc()
+		animator.play("shoot")
+
+
+func debug() -> void:
+	if Input.is_action_just_pressed("heal"):
+		heal(1)
+	if Input.is_action_just_pressed("damage"):
+		damage(1)
+
+
 func timers(delta: float) -> void:
 	# Using timer nodes here would mean unnececary functions and node calls
 	# This way everything is contained in just 1 script with no node requirements
@@ -203,3 +251,15 @@ func die_logic() -> void:
 @rpc("any_peer", "call_local")
 func die() -> void:
 	queue_free()
+func respawn_logic() -> void:
+	if Input.is_action_just_pressed("respawn"):
+		initialize()
+
+
+func damage(p: float) -> void:
+	hp -= p
+
+
+func heal(p: float) -> void:
+	hp += p
+	hp = min(MAX_HP, hp)
