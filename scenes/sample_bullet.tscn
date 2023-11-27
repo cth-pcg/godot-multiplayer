@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://scripts/sample_bullet.gd" id="1_a3jsc"]
 
-
 [node name="SampleBullet" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 3

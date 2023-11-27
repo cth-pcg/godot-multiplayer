@@ -1,18 +1,27 @@
-[gd_scene load_steps=2 format=3 uid="uid://copdg6y03pfss"]
+[gd_scene load_steps=3 format=3 uid="uid://copdg6y03pfss"]
 
-[ext_resource type="Script" path="res://scripts/map_2d.gd" id="1_hajy4"]
+[ext_resource type="PackedScene" uid="uid://3tei6r0r583u" path="res://scenes/death_area.tscn" id="2_yq018"]
+
+[sub_resource type="GDScript" id="GDScript_7p30s"]
+script/source = "extends Node2D
+
+
+func _ready() -> void:
+	pass
+"
 
 [node name="Map2D" type="Node2D"]
-script = ExtResource("1_hajy4")
+script = SubResource("GDScript_7p30s")
 
 [node name="Floor" type="StaticBody2D" parent="."]
+collision_mask = 0
 
 [node name="Polygon2D" type="Polygon2D" parent="Floor"]
 position = Vector2(212.8, 236.8)
-polygon = PackedVector2Array(-212.8, 411.2, -212.8, 371.2, 939.2, 371.2, 939.2, 411.2)
+polygon = PackedVector2Array(-212.8, 411.2, -212.8, 379.2, 939.2, 379.2, 939.2, 411.2)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Floor"]
-position = Vector2(212.8, 236.8)
+polygon = PackedVector2Array(0, 616, 0, 648, 1152, 648, 1152, 616)
 
 [node name="PlayerSpawn" type="Node2D" parent="."]
 
@@ -27,3 +36,21 @@ position = Vector2(704, 512)
 
 [node name="4" type="Marker2D" parent="PlayerSpawn"]
 position = Vector2(960, 512)
+
+[node name="DeathArea" parent="." instance=ExtResource("2_yq018")]
+
+[node name="Polygon2D" type="Polygon2D" parent="DeathArea"]
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DeathArea"]
+polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
+
+[node name="Label" type="Label" parent="."]
+offset_left = 552.0
+offset_top = 248.0
+offset_right = 610.0
+offset_bottom = 326.0
+text = "1: -1HP
+2: +1HP
+3: die"
