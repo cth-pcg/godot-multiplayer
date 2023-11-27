@@ -31,6 +31,7 @@ var input_dir: float = 0
 # Timers
 @export var jump_coyote: float = .08
 @export var jump_buffer: float = .1
+@export var shoot_interval: float = .1
 
 # Peer id.
 @export var peer_id: int:
@@ -52,6 +53,7 @@ var input_dir: float = 0
 
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
+var shoot_timer: float = 0
 var is_jumping: bool
 var is_shooting: bool
 var killer_id: int
@@ -87,7 +89,7 @@ func _physics_process(delta: float) -> void:
 	animation()
 	hp_bar_update.rpc()
 	
-	timers(delta)
+	timers_process(delta)
 	die_logic()
 
 
@@ -178,9 +180,10 @@ func apply_gravity(delta: float) -> void:
 
 func shooting_logic() -> void:
 	is_shooting = false
-	if Input.is_action_just_pressed("shoot"):
+	if shoot_timer < 0 and Input.is_action_pressed("shoot"):
 		shoot.rpc()
 		is_shooting = true
+		shoot_timer = shoot_interval
 
 
 @rpc("any_peer", "call_local")
@@ -215,11 +218,12 @@ func hp_bar_update() -> void:
 		$HPBar.set("theme_override_styles/fill", low_hp_clr)
 
 
-func timers(delta: float) -> void:
+func timers_process(delta: float) -> void:
 	# Using timer nodes here would mean unnececary functions and node calls
 	# This way everything is contained in just 1 script with no node requirements
 	jump_coyote_timer -= delta
 	jump_buffer_timer -= delta
+	shoot_timer -= delta
 
 
 func die_logic() -> void:

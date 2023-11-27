@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://c1db8f528oskp"]
 
 [ext_resource type="Script" path="res://scripts/player_2d.gd" id="1_dcxls"]
-[ext_resource type="PackedScene" uid="uid://btb5ghxjsvd5m" path="res://scenes/sample_bullet.tscn" id="2_obknb"]
+[ext_resource type="PackedScene" uid="uid://btb5ghxjsvd5m" path="res://scenes/bullet.tscn" id="2_32pos"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ciyjc"]
 size = Vector2(32, 32)
@@ -127,7 +127,7 @@ properties/7/watch = false
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_dcxls")
-bullet = ExtResource("2_obknb")
+bullet = ExtResource("2_32pos")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ciyjc")

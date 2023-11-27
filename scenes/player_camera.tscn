@@ -3,3 +3,12 @@
 [node name="PlayerCamera" type="Camera2D"]
 position_smoothing_enabled = true
 position_smoothing_speed = 36.0
+
+[node name="Label" type="Label" parent="."]
+offset_left = -546.0
+offset_top = -277.0
+offset_right = -488.0
+offset_bottom = -199.0
+text = "1: -1HP
+2: +1HP
+3: die"

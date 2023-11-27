@@ -45,12 +45,3 @@ polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DeathArea"]
 polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
-
-[node name="Label" type="Label" parent="."]
-offset_left = 552.0
-offset_top = 248.0
-offset_right = 610.0
-offset_bottom = 326.0
-text = "1: -1HP
-2: +1HP
-3: die"
