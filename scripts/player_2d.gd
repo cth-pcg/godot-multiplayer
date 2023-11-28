@@ -41,7 +41,11 @@ var input_dir: float = 0
 		$IDLabel.text = "ID: " + str(peer_id)
 		set_multiplayer_authority(peer_id)
 
-@export var multishot: float = 1
+@export var bullet_spread: float = PI / 6
+@export var multishot: float = 2.5
+
+@export var max_hp: float = 10
+@export var hp: float = max_hp
 
 @onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
 @onready var muzzle: Node2D = $Sprite/Muzzle
@@ -57,11 +61,9 @@ var jump_buffer_timer: float = 0
 var is_jumping: bool
 
 var shoot_timer: float = 0
-var is_shooting: bool
+var is_just_shoot: bool
 
 var previous_velocity: Vector2 = Vector2(0, 0)
-@export var max_hp: float = 10
-@export var hp: float = max_hp
 
 
 func _ready() -> void:
@@ -180,12 +182,12 @@ func apply_gravity(delta: float) -> void:
 
 
 func shooting_logic() -> void:
-	is_shooting = false
+	is_just_shoot = false
 	if shoot_timer or not Input.is_action_pressed("shoot"):
 		return
 	for _i in range(int((multishot - int(multishot)) > randf()) + int(multishot)):
 		shoot.rpc()
-	is_shooting = true
+	is_just_shoot = true
 	shoot_timer = shoot_interval
 
 
@@ -193,13 +195,13 @@ func shooting_logic() -> void:
 func shoot() -> void:
 	var b: CharacterBody2D = bullet.instantiate()
 	b.global_position = bullet_spawn.global_position
-	b.rotation = muzzle.rotation
+	b.rotation = muzzle.rotation + randf_range(-bullet_spread / 2, bullet_spread / 2)
 	b.shooter_id = peer_id
 	get_tree().root.add_child(b)
 
 
 func animation() -> void:
-	if is_shooting:
+	if is_just_shoot:
 		animator.play("shoot")
 	if previous_velocity.y >= 0 and velocity.y < 0:
 		animator.play("jump")
