@@ -47,7 +47,8 @@ var input_dir: float = 0
 @export var max_hp: float = 10
 @export var hp: float = max_hp
 
-@onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
+@onready var body_anim: AnimationPlayer = $Animators/BodyAnimator
+@onready var muzzle_anim: AnimationPlayer = $Animators/MuzzleAnimator
 @onready var muzzle: Node2D = $Sprite/Muzzle
 @onready var bullet_spawn: Marker2D = muzzle.get_node("BulletSpawn")
 
@@ -202,11 +203,11 @@ func shoot() -> void:
 
 func animation() -> void:
 	if is_just_shoot:
-		animator.play("shoot")
+		muzzle_anim.play("shoot")
 	if previous_velocity.y >= 0 and velocity.y < 0:
-		animator.play("jump")
+		body_anim.play("jump")
 	elif previous_velocity.y > 0 and is_on_floor():
-		animator.play("land")
+		body_anim.play("land")
 	previous_velocity = velocity
 	muzzle.look_at(get_global_mouse_position())
 
