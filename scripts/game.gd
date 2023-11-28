@@ -43,7 +43,7 @@ func load_map() -> void:
 @rpc("any_peer", "call_local")
 func spawn_player(id: int) -> void:
 	var p: Player = player_scene.instantiate()
-	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().position
+	p.global_position = map.get_node("PlayerSpawn").get_children().pick_random().global_position
 	p.peer_id = id
 	print(multiplayer.is_server(), " ", p.peer_id)
 	players.add_child(p, true)

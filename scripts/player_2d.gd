@@ -41,32 +41,33 @@ var input_dir: float = 0
 		$IDLabel.text = "ID: " + str(peer_id)
 		set_multiplayer_authority(peer_id)
 
-@export var bullet: PackedScene
+@export var multishot: float = 1
 
-@onready var camera: Camera2D = preload("res://scenes/player_camera.tscn").instantiate()
 @onready var animator: AnimationPlayer = $Sprite/AnimationPlayer
 @onready var muzzle: Node2D = $Sprite/Muzzle
 @onready var bullet_spawn: Marker2D = muzzle.get_node("BulletSpawn")
-@onready var spawn_point: Vector2 = global_position
-@onready var low_hp_clr: StyleBoxFlat = preload("res://resorces/low.tres")
-@onready var max_hp_clr: StyleBoxFlat = preload("res://resorces/max.tres")
+
+var camera: PackedScene = preload("res://scenes/player_camera.tscn")
+var bullet: PackedScene = preload("res://scenes/bullet.tscn")
+var low_hp_clr: StyleBoxFlat = preload("res://resorces/low.tres")
+var max_hp_clr: StyleBoxFlat = preload("res://resorces/max.tres")
 
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
-var shoot_timer: float = 0
 var is_jumping: bool
+
+var shoot_timer: float = 0
 var is_shooting: bool
-var killer_id: int
 
 var previous_velocity: Vector2 = Vector2(0, 0)
 @export var max_hp: float = 10
 @export var hp: float = max_hp
 
 
-func _ready():
+func _ready() -> void:
 	# Set local camera.
 	if peer_id == multiplayer.get_unique_id():
-		add_child(camera)
+		add_child(camera.instantiate())
 	# Set process functions for current player.
 	var is_local: bool = is_multiplayer_authority()
 	set_process_input(is_local)
@@ -180,10 +181,12 @@ func apply_gravity(delta: float) -> void:
 
 func shooting_logic() -> void:
 	is_shooting = false
-	if not shoot_timer and Input.is_action_pressed("shoot"):
+	if shoot_timer or not Input.is_action_pressed("shoot"):
+		return
+	for _i in range(int((multishot - int(multishot)) > randf()) + int(multishot)):
 		shoot.rpc()
-		is_shooting = true
-		shoot_timer = shoot_interval
+	is_shooting = true
+	shoot_timer = shoot_interval
 
 
 @rpc("any_peer", "call_local")
