@@ -131,7 +131,7 @@ func jump_logic(_delta: float) -> void:
 		jump_buffer_timer = jump_buffer
 	
 	# Jump if grounded, there is jump input, and we aren't jumping already
-	if jump_coyote_timer > 0 and jump_buffer_timer > 0 and not is_jumping:
+	if jump_coyote_timer and jump_buffer_timer and not is_jumping:
 		is_jumping = true
 		jump_coyote_timer = 0
 		jump_buffer_timer = 0
@@ -160,7 +160,7 @@ func apply_gravity(delta: float) -> void:
 	var applied_gravity: float = 0
 	
 	# No gravity if we are grounded
-	if jump_coyote_timer > 0:
+	if jump_coyote_timer:
 		return
 	
 	# Normal gravity limit
@@ -180,7 +180,7 @@ func apply_gravity(delta: float) -> void:
 
 func shooting_logic() -> void:
 	is_shooting = false
-	if shoot_timer < 0 and Input.is_action_pressed("shoot"):
+	if not shoot_timer and Input.is_action_pressed("shoot"):
 		shoot.rpc()
 		is_shooting = true
 		shoot_timer = shoot_interval
@@ -221,9 +221,9 @@ func hp_bar_update() -> void:
 func timers_process(delta: float) -> void:
 	# Using timer nodes here would mean unnececary functions and node calls
 	# This way everything is contained in just 1 script with no node requirements
-	jump_coyote_timer -= delta
-	jump_buffer_timer -= delta
-	shoot_timer -= delta
+	jump_coyote_timer = max(0, jump_coyote_timer - delta)
+	jump_buffer_timer = max(0, jump_buffer_timer - delta)
+	shoot_timer = max(0, shoot_timer - delta)
 
 
 func die_logic() -> void:

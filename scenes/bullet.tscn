@@ -1,11 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://btb5ghxjsvd5m"]
 
-[ext_resource type="Script" path="res://scripts/sample_bullet.gd" id="1_w8wh0"]
+[ext_resource type="Script" path="res://scripts/bullet.gd" id="1_0aktg"]
 
 [node name="Bullet" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 3
-script = ExtResource("1_w8wh0")
+script = ExtResource("1_0aktg")
 
 [node name="Sprite" type="Node2D" parent="."]
 
