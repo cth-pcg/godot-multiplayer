@@ -92,6 +92,7 @@ respawn={
 2d_physics/layer_2="Player"
 2d_physics/layer_3="Damage"
 2d_physics/layer_4="Death"
+2d_physics/layer_5="Item"
 
 [rendering]
 

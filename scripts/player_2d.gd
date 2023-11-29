@@ -46,6 +46,7 @@ var input_dir: float = 0
 
 @export var max_hp: float = 10
 @export var hp: float = max_hp
+@export var lost_hp: float = 0
 
 @onready var body_anim: AnimationPlayer = $Animators/BodyAnimator
 @onready var muzzle_anim: AnimationPlayer = $Animators/MuzzleAnimator
@@ -92,6 +93,7 @@ func _physics_process(delta: float) -> void:
 	
 	animation()
 	hp_bar_update.rpc()
+	lost_hp = max_hp - hp
 	
 	timers_process(delta)
 	die_logic()
