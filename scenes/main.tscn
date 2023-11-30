@@ -5,3 +5,5 @@
 [node name="Players" type="Node" parent="."]
 
 [node name="Spectators" type="Node" parent="."]
+
+[node name="Items" type="Node" parent="."]

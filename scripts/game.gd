@@ -8,6 +8,11 @@ extends Node
 @onready var player_scene: PackedScene = preload("res://scenes/player_2d.tscn")
 @onready var spectators: Node = main.get_node("Spectators")
 @onready var spectator_scene: PackedScene = preload("res://scenes/spectator_camera.tscn")
+@onready var items: Node = main.get_node("Items")
+@onready var item_scene: PackedScene = preload("res://scenes/item.tscn")
+@onready var bombs: Node = main.get_node("Bombs")
+@onready var bomb_scene: PackedScene = preload("res://scenes/bomb.tscn")
+
 
 var port: int
 var menu: Control = null
@@ -52,6 +57,18 @@ func spawn_player(id: int) -> void:
 func spawn_spectator() -> void:
 	var o = spectator_scene.instantiate()
 	spectators.add_child(o)
+
+
+func spawn_item() -> void:
+	var i: Item = item_scene.instantiate()
+	i.global_position = map.get_node("PlayerSpawn").get_children().pick_random().global_position
+	items.add_child(i)
+
+func spawn_bomb() -> void:
+	var b: Bomb = bomb_scene.instantiate()
+	b.global_position = map.get_node("PlayerSpawn").get_children().pick_random().global_position
+	items.add_child(b)
+
 
 
 func remove_player(id: int) -> void:

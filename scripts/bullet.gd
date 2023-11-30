@@ -34,6 +34,9 @@ func _on_area_2d_body_entered(body) -> void:
 		if not body.hp:
 			body.killer_id = shooter_id
 	die()
+	
+
+
 
 
 func die() -> void:

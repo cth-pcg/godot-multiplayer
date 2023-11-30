@@ -11,4 +11,5 @@ offset_right = -488.0
 offset_bottom = -199.0
 text = "1: -1HP
 2: +1HP
-3: die"
+3: die
+4: item spawn"

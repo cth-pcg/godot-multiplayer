@@ -1,0 +1,72 @@
+[gd_scene load_steps=8 format=3 uid="uid://dggwxefabp8ll"]
+
+[ext_resource type="PackedScene" uid="uid://3el0wg4e6mk6" path="res://scenes/item.tscn" id="1_ty8ku"]
+[ext_resource type="Script" path="res://scenes/bomb.gd" id="2_ookki"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ycpl1"]
+size = Vector2(64, 64)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_omivi"]
+radius = 8.0
+
+[sub_resource type="Animation" id="Animation_ktxrx"]
+resource_name = "boom"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Area2D2/CollisionShape2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(30, 30)]
+}
+
+[sub_resource type="Animation" id="Animation_vd1jg"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Area2D2/CollisionShape2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gp2c6"]
+_data = {
+"RESET": SubResource("Animation_vd1jg"),
+"boom": SubResource("Animation_ktxrx")
+}
+
+[node name="Bomb" instance=ExtResource("1_ty8ku")]
+script = ExtResource("2_ookki")
+
+[node name="Area2D" type="Area2D" parent="." index="2"]
+collision_layer = 16
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" index="0"]
+shape = SubResource("RectangleShape2D_ycpl1")
+
+[node name="Area2D2" type="Area2D" parent="." index="3"]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D2" index="0"]
+shape = SubResource("CircleShape2D_omivi")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="4"]
+libraries = {
+"": SubResource("AnimationLibrary_gp2c6")
+}
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_entered" from="Area2D2" to="." method="_on_area_2d_2_body_entered"]

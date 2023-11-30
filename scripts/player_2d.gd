@@ -58,6 +58,7 @@ var bullet: PackedScene = preload("res://scenes/bullet.tscn")
 var low_hp_clr: StyleBoxFlat = preload("res://resorces/low.tres")
 var max_hp_clr: StyleBoxFlat = preload("res://resorces/max.tres")
 
+var killer_id: int
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
 var is_jumping: bool
@@ -66,6 +67,8 @@ var shoot_timer: float = 0
 var is_just_shoot: bool
 
 var previous_velocity: Vector2 = Vector2(0, 0)
+
+var map: Node = null
 
 
 func _ready() -> void:
@@ -106,6 +109,10 @@ func debug() -> void:
 		heal(1)
 	if Input.is_action_just_pressed("1"):
 		damage(1)
+	if Input.is_action_just_pressed("4"):
+		Game.spawn_item()
+	if Input.is_action_just_pressed("5"):
+		Game.spawn_bomb()
 
 
 func x_movement(delta: float) -> void:
@@ -253,3 +260,7 @@ func damage(p: float) -> void:
 func heal(p: float) -> void:
 	hp += p
 	hp = min(max_hp, hp)
+
+
+func _on_item_detector_body_entered(item: Item) -> void:
+	item.on_picked_by(self)
