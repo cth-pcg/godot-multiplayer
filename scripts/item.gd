@@ -2,15 +2,11 @@ extends RigidBody2D
 class_name Item
 
 
-@export var heal: float = 3
+@export var strength: float
 
 
-func on_picked_by(node: Node2D) -> void:
-	if not node is Player:
-		return
-	if node.lost_hp:
-		node.heal(heal)
-		die()
+func on_picked_by(_node) -> void:
+	pass
 
 
 func die() -> void:

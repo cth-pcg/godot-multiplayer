@@ -10,7 +10,6 @@ extends Node
 @onready var spectator_scene: PackedScene = preload("res://scenes/spectator_camera.tscn")
 @onready var items: Node = main.get_node("Items")
 @onready var item_scene: PackedScene = preload("res://scenes/item.tscn")
-@onready var bombs: Node = main.get_node("Bombs")
 @onready var bomb_scene: PackedScene = preload("res://scenes/bomb.tscn")
 
 
@@ -64,8 +63,9 @@ func spawn_item() -> void:
 	i.global_position = map.get_node("PlayerSpawn").get_children().pick_random().global_position
 	items.add_child(i)
 
+
 func spawn_bomb() -> void:
-	var b: Bomb = bomb_scene.instantiate()
+	var b: Item = bomb_scene.instantiate()
 	b.global_position = map.get_node("PlayerSpawn").get_children().pick_random().global_position
 	items.add_child(b)
 
