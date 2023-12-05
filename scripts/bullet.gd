@@ -1,10 +1,11 @@
 extends CharacterBody2D
 
 
-const SPEED: float = 1200
+@export var speed: float = 1200
+@export var strength: float = 1
+
 const GRAVITY_SCALE: float = 2
 const AIR_FRICTION: float = 10
-const DAMAGE: int = 1
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
@@ -15,7 +16,7 @@ var shooter_id: int
 
 func _ready() -> void:
 	direction = Vector2(1, 0).rotated(rotation)
-	velocity = direction * SPEED
+	velocity = direction * speed
 
 
 func _physics_process(delta) -> void:
@@ -27,17 +28,16 @@ func _physics_process(delta) -> void:
 	life_time = max(0, life_time - delta)
 
 
-func _on_area_2d_body_entered(body) -> void:
+func _on_collision_detector_body_entered(body) -> void:
+	die()
 	if body is Player:
 		if body.peer_id != shooter_id:
-			body.damage(DAMAGE)
-		if not body.hp:
-			body.killer_id = shooter_id
-	die()
+			body.damage(strength)
+	if body is Item:
+		body.damage()
 	
-
-
 
 
 func die() -> void:
 	queue_free()
+

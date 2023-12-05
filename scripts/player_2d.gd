@@ -58,7 +58,6 @@ var bullet: PackedScene = preload("res://scenes/bullet.tscn")
 var low_hp_clr: StyleBoxFlat = preload("res://resorces/low.tres")
 var max_hp_clr: StyleBoxFlat = preload("res://resorces/max.tres")
 
-var killer_id: int
 var jump_coyote_timer: float = 0
 var jump_buffer_timer: float = 0
 var is_jumping: bool
