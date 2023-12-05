@@ -1,31 +1,8 @@
 [gd_scene load_steps=10 format=3 uid="uid://dggwxefabp8ll"]
 
 [ext_resource type="PackedScene" uid="uid://3el0wg4e6mk6" path="res://scenes/item.tscn" id="1_ty8ku"]
-[ext_resource type="Texture2D" uid="uid://uvreyvllpvmu" path="res://bomb.png" id="3_xps4x"]
-
-[sub_resource type="GDScript" id="GDScript_ix4xg"]
-script/source = "extends Item
-
-
-func _ready():
-	strength = 100
-	
-func on_picked_by(_body) -> void:
-	pass
-
-func _on_area_2d_body_entered(_bullet) -> void:
-	$AnimationPlayer.play(\"boom\")
-	await $AnimationPlayer.animation_finished
-	queue_free()
-
-
-func _on_area_2d_2_body_entered(player: Player) -> void:
-	var distance: Vector2 = player.global_position - global_position
-	print(distance.length())
-	player.damage(200 / distance.length())
-	player.velocity += Vector2(50, 1) * 1000 / distance
-	queue_free()
-"
+[ext_resource type="Script" path="res://scripts/bomb.gd" id="2_d20sx"]
+[ext_resource type="Texture2D" uid="uid://uvreyvllpvmu" path="res://resorces/bomb.png" id="3_xps4x"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_0c1kw"]
 radius = 24.0
@@ -74,7 +51,8 @@ _data = {
 }
 
 [node name="Bomb" instance=ExtResource("1_ty8ku")]
-script = SubResource("GDScript_ix4xg")
+script = ExtResource("2_d20sx")
+strength = null
 
 [node name="Sprite2D" parent="." index="0"]
 position = Vector2(4.76837e-07, -4)

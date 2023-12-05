@@ -1,11 +1,7 @@
 extends Item
 
 
-func _ready():
-	strength = 100
-
-
-func _on_area_2d_body_entered(_bullet) -> void:
+func _on_area_2d_body_entered(_body) -> void:
 	$AnimationPlayer.play("boom")
 	await $AnimationPlayer.animation_finished
 	die()

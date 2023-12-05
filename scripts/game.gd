@@ -16,6 +16,8 @@ extends Node
 var port: int
 var menu: Control = null
 var map: Node = null
+var player_spawn: Node2D = null
+var item_spawn: Node2D = null
 
 
 func _ready() -> void:
@@ -37,6 +39,9 @@ func load_map() -> void:
 	# Spawn map.
 	map = preload("res://scenes/map_2d.tscn").instantiate()
 	main.add_child(map)
+	
+	player_spawn = map.get_node("PlayerSpawn")
+	item_spawn = map.get_node("ItemSpawn")
 	
 	# if multiplayer.is_server():
 	var id = multiplayer.get_unique_id()
@@ -60,15 +65,14 @@ func spawn_spectator() -> void:
 
 func spawn_item() -> void:
 	var i: Item = item_scene.instantiate()
-	i.global_position = map.get_node("PlayerSpawn").get_children().pick_random().global_position
+	i.global_position = map.get_node("ItemSpawn").get_children().pick_random().global_position
 	items.add_child(i)
 
 
 func spawn_bomb() -> void:
 	var b: Item = bomb_scene.instantiate()
-	b.global_position = map.get_node("PlayerSpawn").get_children().pick_random().global_position
+	b.global_position = map.get_node("ItemSpawn").get_children().pick_random().global_position
 	items.add_child(b)
-
 
 
 func remove_player(id: int) -> void:

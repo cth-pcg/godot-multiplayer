@@ -1,8 +1,7 @@
 extends Item
 
 
-func _ready():
-	strength = 3
+@export var strength: float = 3
 
 
 func on_picked_by(node: Node2D) -> void:

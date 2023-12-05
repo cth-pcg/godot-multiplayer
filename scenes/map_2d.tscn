@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=3 uid="uid://copdg6y03pfss"]
+[gd_scene load_steps=3 format=3 uid="uid://copdg6y03pfss"]
 
-[ext_resource type="PackedScene" uid="uid://dggwxefabp8ll" path="res://scenes/bomb.tscn" id="2_iniqp"]
 [ext_resource type="PackedScene" uid="uid://3tei6r0r583u" path="res://scenes/death_area.tscn" id="2_yq018"]
 
 [sub_resource type="GDScript" id="GDScript_7p30s"]
@@ -24,6 +23,15 @@ polygon = PackedVector2Array(-212.8, 411.2, -212.8, 379.2, 939.2, 379.2, 939.2, 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Floor"]
 polygon = PackedVector2Array(0, 616, 0, 648, 1152, 648, 1152, 616)
 
+[node name="DeathArea" parent="." instance=ExtResource("2_yq018")]
+
+[node name="Polygon2D" type="Polygon2D" parent="DeathArea"]
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DeathArea"]
+polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
+
 [node name="PlayerSpawn" type="Node2D" parent="."]
 
 [node name="1" type="Marker2D" parent="PlayerSpawn"]
@@ -38,14 +46,13 @@ position = Vector2(704, 512)
 [node name="4" type="Marker2D" parent="PlayerSpawn"]
 position = Vector2(960, 512)
 
-[node name="DeathArea" parent="." instance=ExtResource("2_yq018")]
+[node name="ItemSpawn" type="Node2D" parent="."]
 
-[node name="Polygon2D" type="Polygon2D" parent="DeathArea"]
-color = Color(1, 0, 0, 1)
-polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
+[node name="1" type="Marker2D" parent="ItemSpawn"]
+position = Vector2(320, 0)
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="DeathArea"]
-polygon = PackedVector2Array(-640, 768, 1792, 768, 1792, 832, -640, 832)
+[node name="2" type="Marker2D" parent="ItemSpawn"]
+position = Vector2(576, 0)
 
-[node name="Bomb" parent="." instance=ExtResource("2_iniqp")]
-position = Vector2(353, 514)
+[node name="3" type="Marker2D" parent="ItemSpawn"]
+position = Vector2(832, 0)
