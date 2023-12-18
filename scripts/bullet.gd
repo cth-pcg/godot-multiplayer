@@ -18,14 +18,27 @@ func _ready() -> void:
 	direction = Vector2(1, 0).rotated(rotation)
 	velocity = direction * speed
 
+@rpc("any_peer", "call_remote")
+func set_state(v, life_time):
+	velocity = v
+	life_time = life_time
+
+@rpc("any_peer", "call_remote")
+func physics_process(delta, v, life_time):
+	v.x = move_toward(v.x, 0, AIR_FRICTION)
+	v.y += gravity * GRAVITY_SCALE * delta
+	life_time = max(0, life_time - delta)
+	set_state.rpc_id(multiplayer.get_remote_sender_id(), v, life_time)
+
 
 func _physics_process(delta) -> void:
 	if not life_time:
 		die()
-	velocity.x = move_toward(velocity.x, 0, AIR_FRICTION)
-	velocity.y += gravity * GRAVITY_SCALE * delta
+	if multiplayer.is_server():
+		physics_process(delta, velocity, life_time)
+	else:
+		physics_process.rpc_id(1, delta, velocity, life_time)
 	move_and_slide()
-	life_time = max(0, life_time - delta)
 
 
 func _on_collision_detector_body_entered(body) -> void:
