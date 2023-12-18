@@ -24,11 +24,15 @@ func set_state(v, life_time):
 	life_time = life_time
 
 @rpc("any_peer", "call_remote")
-func physics_process(delta, v, life_time):
+func physics_process(delta, v, life_time_):
 	v.x = move_toward(v.x, 0, AIR_FRICTION)
 	v.y += gravity * GRAVITY_SCALE * delta
-	life_time = max(0, life_time - delta)
-	set_state.rpc_id(multiplayer.get_remote_sender_id(), v, life_time)
+	life_time_ = max(0, life_time_ - delta)
+	if multiplayer.is_server():
+		velocity = v
+		life_time = life_time_
+	else:
+		set_state.rpc_id(multiplayer.get_remote_sender_id(), v, life_time_)
 
 
 func _physics_process(delta) -> void:
