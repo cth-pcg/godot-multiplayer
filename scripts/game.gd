@@ -78,3 +78,15 @@ func spawn_bomb() -> void:
 func remove_player(id: int) -> void:
 	if players.has_node(str(id)):
 		players.get_node(str(id)).queue_free()
+
+
+@rpc("any_peer")
+func send_player_info(id, name) -> void:
+	if not GameManager.players.has(id):
+		GameManager.players[id] = {
+			"id" : id,
+			"name" : name
+		}
+	if multiplayer.is_server():
+		for i in GameManager.players:
+			send_player_info.rpc(GameManager.players[i].name, i)

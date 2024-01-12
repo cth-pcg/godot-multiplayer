@@ -27,33 +27,39 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
 layout_mode = 2
+columns = 2
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Label2" type="Label" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(120, 20)
 layout_mode = 2
 text = "Room Nuber: "
 vertical_alignment = 1
 
-[node name="RoomNum" type="TextEdit" parent="VBoxContainer/HBoxContainer"]
+[node name="RoomNumEdit" type="TextEdit" parent="VBoxContainer/GridContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(180, 40)
 layout_mode = 2
 text = "1"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/GridContainer"]
+layout_mode = 2
+text = "Name:"
+
+[node name="NameEdit" type="TextEdit" parent="VBoxContainer/GridContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Create" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="Create" type="Button" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
 text = "Create Server"
 
-[node name="Connect" type="Button" parent="VBoxContainer/HBoxContainer2"]
+[node name="Connect" type="Button" parent="VBoxContainer/GridContainer"]
 custom_minimum_size = Vector2(150, 60)
 layout_mode = 2
 text = "Connect as Client"
 
-[connection signal="pressed" from="VBoxContainer/HBoxContainer2/Create" to="." method="_on_create_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer2/Connect" to="." method="_on_connect_pressed"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/Create" to="." method="_on_create_pressed"]
+[connection signal="pressed" from="VBoxContainer/GridContainer/Connect" to="." method="_on_connect_pressed"]
